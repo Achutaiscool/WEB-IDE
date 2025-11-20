@@ -15,12 +15,21 @@ const defaultHTML = `<!doctype html>
 const defaultCSS = `body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 20px; } h1 { color: #22c55e; }`
 const defaultJS = `console.log('Hello from JS')`
 
-export default function EditorPane() {
+export default function EditorPane({ loadProject }) {
   const [html, setHtml] = useState(defaultHTML)
   const [css, setCss] = useState(defaultCSS)
   const [js, setJs] = useState(defaultJS)
   const [title, setTitle] = useState('Untitled')
   const iframeRef = useRef()
+
+  useEffect(() => {
+    if (!loadProject) return
+    // load project contents into editor
+    setTitle(loadProject.title || 'Untitled')
+    setHtml(loadProject.html || '')
+    setCss(loadProject.css || '')
+    setJs(loadProject.js || '')
+  }, [loadProject])
 
   useEffect(() => {
     const t = setTimeout(updatePreview, 200)
