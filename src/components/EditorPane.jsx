@@ -15,7 +15,7 @@ const defaultHTML = `<!doctype html>
 const defaultCSS = `body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 20px; } h1 { color: #22c55e; }`
 const defaultJS = `console.log('Hello from JS')`
 
-export default function EditorPane() {
+export default function EditorPane({ loadProject }) {
   const [html, setHtml] = useState(defaultHTML)
   const [css, setCss] = useState(defaultCSS)
   const [js, setJs] = useState(defaultJS)
@@ -32,6 +32,15 @@ export default function EditorPane() {
     const srcDoc = `<!doctype html><html><head><style>${css}</style></head><body>${html}${errorHook}<script>${js}</script></body></html>`
     if (iframeRef.current) iframeRef.current.srcdoc = srcDoc
   }
+
+  useEffect(() => {
+    if (!loadProject) return
+    // load project contents into editor
+    setTitle(loadProject.title || 'Untitled')
+    setHtml(loadProject.html || '')
+    setCss(loadProject.css || '')
+    setJs(loadProject.js || '')
+  }, [loadProject])
 
   useEffect(() => {
     const t = setTimeout(updatePreview, 200)
